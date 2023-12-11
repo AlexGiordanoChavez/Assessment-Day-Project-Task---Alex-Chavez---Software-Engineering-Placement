@@ -1,0 +1,37 @@
+Examples of HTTP requests:
+
+1.POST request to the /order endpoint without specifying any items.
+curl -X POST http://localhost:8080/order
+
+2.POST request to the /order endpoint with a string.
+curl -X POST -d "items=hello" http://localhost:8080/order
+
+3.POST request to the /order endpoint with the items parameter set to 0.
+curl -X POST -d "items=0" http://localhost:8080/order
+
+4.POST request to the /order endpoint with a negative number.
+curl -X POST -d "items=-250" http://localhost:8080/order
+
+5.POST request to the /order endpoint with a number of items and especial characters.
+curl -X POST -d "items=500*" http://localhost:8080/order
+
+6.POST request to the /order endpoint with a valid number of items.
+curl -X POST -d "items=501" http://localhost:8080/order
+
+7.POST request to the /order endpoint with multiple orders.
+curl -X POST -d "items=1&items=250&items=251&items=501&items=12001" http://localhost:8080/order
+
+
+(
+    Install Golang from the official website
+
+    go mod init example/CalculatePacks
+
+    go get github.com/gin.gonic/gin
+
+    extensions:
+    go
+    code runner
+
+    (Download if the laptop can't run Golang)
+)

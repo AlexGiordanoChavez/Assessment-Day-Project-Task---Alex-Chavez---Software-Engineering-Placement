@@ -1,0 +1,94 @@
+package main
+
+import (
+	"fmt"
+	"regexp"
+	"strconv"
+)
+
+// correctCalculatePacks calculates the correct number of packs needed to fulfill an order. Following the above rules:
+func correctCalculatePacks(items int) map[int]int {
+	if items == 0 {
+		// Handle the case where items is 0
+		fmt.Println("You cannot order 0 items.")
+		return make(map[int]int)
+	}
+
+	packSizes := []int{5000, 2000, 1000, 500, 250}
+	correctPacks := make(map[int]int)
+
+	for _, packSize := range packSizes {
+		packs := items / packSize
+		if packs > 0 {
+			// Check if the pack size is 250 and the remaining items fall within a specific range
+			if packSize == 250 && items > 250 && items < 500 {
+				correctPacks[500] = 1
+				items -= 500
+			} else {
+				correctPacks[packSize] = packs
+				items -= packs * packSize
+			}
+		}
+	}
+
+	// Add remaining items using the smallest possible pack size
+	if items > 0 {
+		correctPacks[250] = 1
+	}
+
+	return correctPacks
+}
+
+// getInputAndValidate prompts the user to input the number of items and validates the input
+func getInputAndValidate() int {
+	var items int
+	validInput := false
+
+	// Regular expression to match only numeric characters
+	numericRegex := regexp.MustCompile(`^\d+$`)
+
+	// Loop until a valid input is received
+	for !validInput {
+		// Prompt the user to input the value of items
+		fmt.Print("Enter the number of items: ")
+
+		// Read the entire line
+		var input string
+		fmt.Scanln(&input)
+
+		// Check if the input contains only numeric characters
+		if numericRegex.MatchString(input) {
+			// Try to convert the input to an integer
+			num, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Println("Invalid input. Please enter a valid integer.")
+			} else if num == 0 {
+				fmt.Println("You cannot order 0 items. Please enter a valid number.")
+			} else {
+				// If no error and the input is non-zero, set validInput to true to exit the loop
+				validInput = true
+				items = num
+			}
+		} else {
+			fmt.Println("Invalid input. Please enter a valid integer.")
+		}
+	}
+
+	return items
+}
+
+func main() {
+	// Get the number of items from user input
+	items := getInputAndValidate()
+
+	// Calculate the correct number of packs
+	correctPacks := correctCalculatePacks(items)
+
+	fmt.Printf("Items ordered: %d\n", items)
+
+	// Print the correct number of packs
+	fmt.Println("Correct number of packs:")
+	for size, count := range correctPacks {
+		fmt.Printf("%d x %d\n", count, size)
+	}
+}
